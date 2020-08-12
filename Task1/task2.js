@@ -1,9 +1,11 @@
 const fs = require('fs');
 
+//Ex 1 (notes)
 // const fileContent = fs.readFileSync('./csv/data.csv', 'utf8');
 // console.log(fileContent);
 // fs.writeFileSync('./output.txt', fileContent, 'utf8')
 
+//Ex 2 (notes)
 // const fileContent = fs.readFile('./csv/data.csv', 'utf8', (err, file) => {
 //     if (!err) {
 //         fs.writeFile('./output.txt', fileContent, 'utf8',err => {
@@ -50,19 +52,3 @@ rl.on('line', (input) => {
 rl.on('close', () => {
     console.log('End!')
 })
-
-// const file = './csv/data.csv';
-// const rStream = fs.createReadStream(file);
-// rStream.on('data', chunk => {
-//     const data = chunk.toString();
-
-//     console.log(chunk.toString());
-// });
-// rStream.on('close', () => {
-
-// });
-// rStream.on(err => {
-//     console.error(err.message);
-// })
-
-
