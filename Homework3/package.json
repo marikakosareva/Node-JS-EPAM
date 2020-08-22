@@ -1,5 +1,5 @@
 {
-  "name": "task2",
+  "name": "task3",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,6 +12,9 @@
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "express": "^4.17.1",
+    "pg": "^8.3.2",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.4",
     "uuid": "^8.3.0"
   },
   "devDependencies": {

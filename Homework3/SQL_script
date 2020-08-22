@@ -1,0 +1,13 @@
+CREATE TABLE public.users
+(
+    id character(36) NOT NULL,
+    login character(50) NOT NULL,
+    password character(50) NOT NULL,
+    age integer,
+    is_deleted boolean NOT NULL,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO public.users(
+	id, login, password, age, is_deleted)
+	VALUES ('57fcf5cf-8ba9-4e41-ab82-6f557c3f3e6v', 'Sasha', '12345qwerty', 16, false);

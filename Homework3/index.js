@@ -2,9 +2,6 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const Joi = require('@hapi/joi');
 const { getUserById, createUser, updateUser, getAutoSuggestUsers, deleteUser, getUsers } = require('./users');
-const { Sequelize } = require('sequelize');
-
-const sequelize = new Sequelize('postgres://ugxvmpolwfczcf:a489e7cc2ef9d960172866ec763361fb6a85f0d4983f74b0be0022fc1fbc9584@ec2-35-175-155-248.compute-1.amazonaws.com:5432/d2q2j16p20b30b')
 
 const app = express();
 const PORT = process.env.PORT || 60;
