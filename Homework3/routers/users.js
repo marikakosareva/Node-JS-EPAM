@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const Joi = require('@hapi/joi');
-const { getUserById, createUser, updateUser, getAutoSuggestUsers, deleteUser, getUsers } = require('./../services/users');
+const { getUserById, createUser, updateUser, getAutoSuggestUsers, deleteUser, getUsers, addUsersToGroup } = require('./../services/users');
 const db = require('./../data-access/db');
 const express = require('express');
 const router = express.Router();
@@ -66,6 +66,19 @@ router.post('/', function (req, res) {
                 .then(user => res.send(user))
                 .catch(err => console.log(err));
         }
+    } catch {
+        res.status(500).send();
+    }
+});
+
+router.post('/group', function (req, res) {
+    try {
+        const { user_ids, group_id } = req.body;
+        //console.log(user_ids);
+        //console.log(group_id);
+        addUsersToGroup(group_id, user_ids)
+            .then(result => res.send(result))
+            .catch(err => console.log(err));
     } catch {
         res.status(500).send();
     }

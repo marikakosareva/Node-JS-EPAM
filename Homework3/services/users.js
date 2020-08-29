@@ -1,5 +1,26 @@
-const users = [];
+const db = require('../data-access/db');
 const User = require('./../models/User');
+const UserToGroup = require('./../models/UserToGroup');
+
+
+async function addUsersToGroup(group_id, user_ids) {
+    const transaction = await db.transaction();
+    try {
+    
+        for (let i = 0; i<user_ids.length; i++) {
+            await UserToGroup.create({
+                user_id: user_ids[i],
+                group_id: group_id
+            }, {transaction});
+        }   
+
+        await transaction.commit();
+
+    } catch (err) {
+        await transaction.rollback();
+        throw Error("Something went wrong!");
+    }
+}
 
 function getUsers() {
     return User.findAll();
@@ -40,5 +61,6 @@ module.exports = {
     updateUser,
     getAutoSuggestUsers,
     deleteUser,
-    getUsers
+    getUsers,
+    addUsersToGroup
 };
