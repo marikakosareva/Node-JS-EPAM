@@ -1,10 +1,17 @@
 const { v4: uuidv4 } = require('uuid');
 const Joi = require('@hapi/joi');
-const { getUserById, createUser, updateUser, getAutoSuggestUsers, deleteUser, getUsers, addUsersToGroup } = require('./../services/users');
+const { getUserById, 
+    createUser, 
+    updateUser, 
+    getAutoSuggestUsers, 
+    deleteUser, 
+    getUsers, 
+    addUsersToGroup } = require('./../services/users');
 const db = require('./../data-access/db');
 const express = require('express');
 const router = express.Router();
-
+const { debug } = require('./../logger');
+const winston = require('winston');
 
 const schema = Joi.object({
     id: Joi.string()
@@ -31,10 +38,11 @@ const schema = Joi.object({
 });
 
 router.get('/', function (req, res) {
+    debug('getUsers');
     getUsers()
         .then(user => res.send(user))
         .catch(err => {
-            console.log(err);
+            winston.error('method: getUsers', 'message: ' + err.message);
             res.status(404).send();
         });
 });
@@ -42,10 +50,11 @@ router.get('/', function (req, res) {
 router.get('/:id', function (req, res) {
     try {
         const _id = req.params.id;
+        debug('getUserById' + ' ' + _id);
         getUserById(_id)
             .then(user => res.send(user))
             .catch(err => {
-                console.log(err);
+                winston.error('method: getUserById', 'arguments: ' + _id, 'message: ' + err.message);
                 res.status(404).send();
             }) 
     } catch {
@@ -62,9 +71,12 @@ router.post('/', function (req, res) {
         if (validationResult.error) {
             res.status(400).send({ error: validationResult.error.details });
         } else {
+            debug('createUser' + ' ' + JSON.stringify(user));
             createUser({ ...user })
                 .then(user => res.send(user))
-                .catch(err => console.log(err));
+                .catch(err => {
+                    winston.error('method: createUser', 'arguments: ' + JSON.stringify(user), 'message: ' + err.message);
+                });
         }
     } catch {
         res.status(500).send();
@@ -74,11 +86,12 @@ router.post('/', function (req, res) {
 router.post('/group', function (req, res) {
     try {
         const { user_ids, group_id } = req.body;
-        //console.log(user_ids);
-        //console.log(group_id);
+        debug('addUsersToGroupr' + ' ' + group_id + ' ' + user_ids);
         addUsersToGroup(group_id, user_ids)
             .then(result => res.send(result))
-            .catch(err => console.log(err));
+            .catch(err => {
+                winston.error('method: addUsersToGroup', 'arguments: ' + JSON.stringify({group_id, user_ids}), 'message: ' + err.message);
+            });
     } catch {
         res.status(500).send();
     }
@@ -88,10 +101,11 @@ router.patch('/:id', function (req, res) {
     try {
         const _id = req.params.id;
         const userData = req.body;
+        debug('updateUser' + ' ' + _id + ' ' + JSON.stringify(userData));
         updateUser(_id, userData)
             .then(user => res.send(user))
             .catch(err => {
-                console.log(err);
+                winston.error('method: updateUser', 'arguments: ' + JSON.stringify({_id, ...userData}), 'message: ' + err.message);
                 res.status(404).send();
             });
     } catch {
@@ -103,10 +117,11 @@ router.get('/', function (req, res) {
     try {
         const _limit = req.query.limit;
         const _suggest = req.query.suggest;
+        debug('getAutoSuggestUsers' + ' ' + _suggest + ' ' + _limit);
         getAutoSuggestUsers(_suggest, _limit)
             .then(users => res.send(users))
             .catch(err => {
-                console.log(err);
+                winston.error('method: getAutoSuggestUsers', 'arguments: ' + JSON.stringify({_suggest, _limit}), 'message: ' + err.message);
                 res.status(404).send();
             }) 
     } catch {
@@ -117,9 +132,12 @@ router.get('/', function (req, res) {
 router.delete('/:id', function (req, res) {
     try {
         const _id = req.params.id;
+        debug('deleteUser' + ' ' + _id);
         deleteUser(_id)
             .then(user => res.send({ id: _id }))
-            .catch(err => console.log(err));
+            .catch(err => {
+                winston.error('method: deleteUser', 'arguments: ' + _id, 'message: ' + err.message);
+            });
     } catch {
         res.status(500).send();
     }
