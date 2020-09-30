@@ -10,9 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hapi/boom": "^9.1.0",
     "@hapi/joi": "^17.1.1",
+    "cors": "^2.8.5",
     "debug": "^4.1.1",
     "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
     "pg": "^8.3.2",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.3.4",
