@@ -1,4 +1,3 @@
-const createError = require('http-errors');
 const winston = require('winston');
 
 module.exports = async function wrapper(res, service, predefinedResponse, next) {
@@ -8,6 +7,6 @@ module.exports = async function wrapper(res, service, predefinedResponse, next) 
         res.send(predefinedResponse ? predefinedResponse : result);
     } catch (err) {
         winston.error('message: ' + err.message);
-        next(createError(404));
+        next(err);
     }
 };

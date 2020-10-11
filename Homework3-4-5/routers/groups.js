@@ -10,7 +10,7 @@ const { getGroupById,
     getGroups } = require('./../services/groups');
 const db = require('./../data-access/db');
 const { debug } = require('./../logger');
-const schema = require('../validation/groups');
+const { validateGroup } = require('../validation/groups');
 const wrapper = require('../common/wrapper');
 const router = express.Router();
 
@@ -20,35 +20,35 @@ router.get('/', checkToken, function (req, res) {
 });
 
 router.get('/:id', checkToken, function (req, res) {
-    const _id = req.params.id;
-    debug('getGroupById' + ' ' + _id);
-    wrapper(res, () => getGroupById(_id));
+    const { id } = req.params;
+    debug('getGroupById' + ' ' + id);
+    wrapper(res, () => getGroupById(id));
 });
 
 router.post('/', checkToken, function (req, res) {
     const groupData = req.body;
     const id = uuidv4();
-    const group = { ...groupData, id }
-    const validationResult = schema.validate(group);
-    if (validationResult.error) {
-        throw createError(400, 'Validation Error!');
-    } else {
-        debug('createGroup' + ' ' + JSON.stringify(group));
-        wrapper (res, () => createGroup({ ...group }));
-    }
+    const group = { ...groupData, id };
+    //вынести + 
+    validateGroup(group, "create");
+    debug('createGroup' + ' ' + JSON.stringify(group));
+    wrapper (res, () => createGroup({ ...group }));
 });
 
 router.patch('/:id', checkToken, function (req, res) {
-    const _id = req.params.id;
+    const { id } = req.params;
     const groupData = req.body;
-    debug('updateGroup' + ' ' + _id + ' ' + JSON.stringify(groupData));
-    wrapper(res, () => updateGroup(_id, groupData));
+    //валидация +
+    validateGroup(groupData, "update");
+    debug('updateGroup' + ' ' + id + ' ' + JSON.stringify(groupData));
+    wrapper(res, () => updateGroup(id, groupData));
 });
 
 router.delete('/:id', checkToken, function (req, res) {
-    const _id = req.params.id;
-    debug('deleteGroup' + ' ' + _id);
-    wrapper(res, () => deleteGroup(_id), {_id});
+    //_id почему?
+    const { id } = req.params;
+    debug('deleteGroup' + ' ' + id);
+    wrapper(res, () => deleteGroup(id), {id});
 });
 
 module.exports = router;

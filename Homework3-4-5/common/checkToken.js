@@ -12,7 +12,6 @@ module.exports = (req, res, next) => {
             }
         })
     } else {
-        console.log("lala");
         next(createError(401, 'Unauthorized!'));
     }
 }

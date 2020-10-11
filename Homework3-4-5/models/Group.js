@@ -14,9 +14,12 @@ const Group = db.define('group', {
     permissions: {
         type: Sequelize.STRING,
         get: function() {
-            return JSON.parse(this.getDataValue('permissions'));
+            const parmissions = this.getDataValue('permissions');
+            if (parmissions) return JSON.parse(parmissions);
+            return [];
         }, 
         set: function(val) {
+            console.log('set');
             return this.setDataValue('permissions', JSON.stringify(val));
         }
     }

@@ -12,28 +12,24 @@ const { getUserById,
     addUsersToGroup } = require('./../services/users');
 const db = require('./../data-access/db');
 const { debug } = require('./../logger');
-const schema = require('../validation/users');
+const { validateUser } = require('../validation/users');
 const wrapper = require('../common/wrapper');
 const checkToken = require('../common/checkToken');
 const router = express.Router();
 
 router.get('/:id', checkToken, function (req, res, next) {
-    const _id = req.params.id;
-    debug('getUserById' + ' ' + _id);
-    wrapper(res, () => getUserById(_id), undefined, next);
+    const { id } = req.params;
+    debug('getUserById' + ' ' + id);
+    wrapper(res, () => getUserById(id), undefined, next);
 });
 
 router.post('/', checkToken, function (req, res, next) {
     const userData = req.body;
     const id = uuidv4();
     const user = { ...userData, id }
-    const validationResult = schema.validate(user);
-    if (validationResult.error) {
-        throw createError(400, 'Validation Error!');
-    } else {
-        debug('createUser' + ' ' + JSON.stringify(user));
-        wrapper(res, () => createUser({ ...user }), undefined, next);
-    }
+    validateUser(user, "create");
+    debug('createUser' + ' ' + JSON.stringify(user));
+    wrapper(res, () => createUser({ ...user }), undefined, next);
 });
 
 router.post('/group', checkToken, function (req, res, next) {
@@ -43,10 +39,11 @@ router.post('/group', checkToken, function (req, res, next) {
 });
 
 router.patch('/:id', checkToken, function (req, res, next) {
-    const _id = req.params.id;
+    const { id } = req.params;
     const userData = req.body;
-    debug('updateUser' + ' ' + _id + ' ' + JSON.stringify(userData));
-    wrapper(res, () => updateUser(_id, userData), undefined, next);
+    validateUser(userData, "update");
+    debug('updateUser' + ' ' + id + ' ' + JSON.stringify(userData));
+    wrapper(res, () => updateUser(id, userData), undefined, next);
 });
 
 // router.get('/', checkToken, function (req, res) {
@@ -61,9 +58,9 @@ router.get('/', checkToken, function (req, res, next) {
 });
 
 router.delete('/:id', checkToken, function (req, res, next) {
-    const _id = req.params.id;
-    debug('deleteUser' + ' ' + _id);
-    wrapper(res, () => deleteUser(_id), { id: _id }, undefined, next);
+    const { id } = req.params;
+    debug('deleteUser' + ' ' + id);
+    wrapper(res, () => deleteUser(id), { id }, undefined, next);
 });
 
 module.exports = router;

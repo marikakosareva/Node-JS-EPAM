@@ -11,7 +11,7 @@ router.post('/', async function (req, res, next) {
     const user = allUsers.find(item => item.login === login && item.password === password);
     if (user) {
         const payload = { id: user.id };
-        const token = jwt.sign(payload, 'secret', {expiresIn: 40});
+        const token = jwt.sign(payload, 'secret', {expiresIn: 120});
         res.send(token);
     } else {
         next(createError(403, 'Bad login/password combination!'));
