@@ -1,6 +1,8 @@
+const createError = require('http-errors');
 const db = require('../data-access/db');
 const User = require('./../models/User');
 const UserToGroup = require('./../models/UserToGroup');
+
 
 
 async function addUsersToGroup(group_id, user_ids) {
@@ -18,7 +20,7 @@ async function addUsersToGroup(group_id, user_ids) {
 
     } catch (err) {
         await transaction.rollback();
-        throw Error("Something went wrong!");
+        throw createError(404, 'Transaction went wrong!');
     }
 }
 

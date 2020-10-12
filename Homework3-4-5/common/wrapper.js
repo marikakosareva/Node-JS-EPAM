@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const winston = require('winston');
 
 module.exports = async function wrapper(res, service, predefinedResponse, next) {

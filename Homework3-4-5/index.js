@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const winston = require('winston');
 var cors = require('cors');
